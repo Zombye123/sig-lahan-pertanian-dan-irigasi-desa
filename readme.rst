@@ -2,7 +2,7 @@
 sig pertanian dan jaringan irigasi
 ##################################
 
-aplikasi ini di buat untuk memenuhu syarat tugas akhir di universitas siryakancana
+aplikasi ini di buat untuk memenuhu syarat tugas akhir di universitas suryakancana
 mungkin teman teman inging berkoleborasi , aplikasi ini masih belum bisa di bilang sempurna dan masih 
 banyak lagi perubahan yang mungkin kalian tambahkan.
 
