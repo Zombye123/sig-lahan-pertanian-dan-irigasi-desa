@@ -69,6 +69,12 @@
 					</div>
 
 					<div class="form-group">
+						<label>Tahun</label>
+						<input type="text" name="tahun" class="form-control" placeholder="Contoh: 2025">
+					</div>
+
+
+					<div class="form-group">
 						<label>Alamat Pemilik</label>
 						<input type="text" name="alamat_pemilik" class="form-control" placeholder="Alamat Pemilik">
 					</div>

@@ -33,6 +33,13 @@
 			<a href="<?= base_url('home/about') ?>" class="nav-link">About</a>
 		</li>
 
+		<!-- Tombol Statistik -->
+<li class="nav-item">
+    <a href="<?= base_url('statistik') ?>" class="nav-link">
+        <i class="fas fa-chart-bar"></i> Statistik
+    </a>
+</li>
+
 
 	</ul>
 

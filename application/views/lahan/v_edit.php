@@ -75,6 +75,11 @@
 					</div>
 
 					<div class="form-group">
+                        <label>Tahun</label>
+                        <input type="text" name="tahun" value="<?= $lahan->tahun ?>" class="form-control" placeholder="Tahun">
+                    </div>
+
+					<div class="form-group">
 						<label>Denah GeoJSON</label>
 						<textarea name="denah_geojson" rows="4" class="form-control"><?= $lahan->denah_geojson ?></textarea>
 					</div>

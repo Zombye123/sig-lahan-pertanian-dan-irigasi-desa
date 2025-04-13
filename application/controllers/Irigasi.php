@@ -159,15 +159,26 @@ class Irigasi extends CI_Controller
 		$this->load->view('layout/v_wrapper', $data, FALSE);
 	}
 
-	//Delete one item
-	public function delete($id_irigasi = NULL)
-	{
-		$this->user_login->protek_halaman();
-		$data = array('id_irigasi' => $id_irigasi);
-		$this->m_irigasi->delete($data);
-		$this->session->set_flashdata('sukses', 'Data Berhasil Dihapus !!!');
-		redirect('irigasi');
-	}
+	// Fungsi untuk menghapus banyak data sekaligus
+public function bulk_delete()
+{
+    $this->user_login->protek_halaman();
+
+    $id_irigasi = $this->input->post('id_irigasi'); // Ambil data dari checkbox
+
+    if (!empty($id_irigasi)) {
+        foreach ($id_irigasi as $id) {
+            $this->m_irigasi->delete(array('id_irigasi' => $id)); // Hapus satu per satu
+        }
+        $this->session->set_flashdata('sukses', 'Data yang dipilih berhasil dihapus!');
+    } else {
+        $this->session->set_flashdata('error', 'Tidak ada data yang dipilih.');
+    }
+
+    redirect('irigasi');
+}
+
+
 }
 
 /* End of file Irigasi.php */

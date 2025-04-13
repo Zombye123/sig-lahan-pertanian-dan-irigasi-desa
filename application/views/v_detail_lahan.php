@@ -44,6 +44,11 @@
 							<th>:</th>
 							<td><?= $lahan->alamat_pemilik ?></td>
 						</tr>
+						<tr>
+							<th>Tahun</th>
+							<th>:</th>
+							<td><?= $lahan->tahun ?></td>
+						</tr>
 					</table>
 				</div>
 			</div>
@@ -55,7 +60,6 @@
 					<h3 class="card-title">Foto</h3>
 				</div>
 				<div class="card-body">
-
 					<div class="row">
 						<div class="col-sm-3">
 							<a href="<?= base_url('gambar/' . $lahan->gambar) ?>" data-toggle="lightbox" data-title="<?= $lahan->nama_lahan ?>" data-gallery="gallery">
@@ -68,36 +72,29 @@
 								<a href="<?= base_url('foto/' . $value->foto) ?>" data-toggle="lightbox" data-title="<?= $value->ket ?>" data-gallery="gallery">
 									<img src="<?= base_url('foto/' . $value->foto) ?>" class="img-fluid mb-2" alt="white sample" />
 								</a>
-
 							</div>
 						<?php } ?>
 					</div>
-
-
 				</div>
 			</div>
 		</div>
 
-
-
 	</div>
 </div>
-
 
 <script>
 	var gruplahan = L.layerGroup();
 	var grupirigasi = L.layerGroup();
 
 	var peta1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        maxZoom: 19,
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-            '<a href="https://carto.com/attributions">CARTO</a>'
-    });
-
-	var peta2   =L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
-		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+		maxZoom: 19,
+		attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://carto.com/attributions">CARTO</a>'
 	});
 
+	var peta2 = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	});
 
 	var peta3 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -108,7 +105,7 @@
 		zoom: 15,
 		layers: [peta2, gruplahan, grupirigasi]
 	});
-	
+
 	var baseLayers = {
 		"Grayscale": peta1,
 		"Satelite": peta2,
@@ -135,9 +132,10 @@
 		layer.bindPopup("<p><img src='<?= base_url('gambar/' . $lahan->gambar) ?>' width='280px'><br><br>" +
 			"Nama Lahan : <?= $lahan->nama_lahan ?></br>" +
 			"Luas Lahan : <?= $lahan->luas_lahan ?></br>" +
-			"Pemilik Lahan : <?= $lahan->luas_lahan ?></br>" +
+			"Pemilik Lahan : <?= $lahan->pemilik_lahan ?></br>" +
 			"Alamat Pemilik : <?= $lahan->alamat_pemilik ?></br>" +
-			"Isi Lahan : <?= $lahan->isi_lahan ?></br></br>" +
+			"Isi Lahan : <?= $lahan->isi_lahan ?></br>" +
+			"Tahun : <?= $lahan->tahun ?></br></br>" + // Tambahan
 			"<a href='<?= base_url('home/detail_lahan/' . $lahan->id_lahan) ?>' class='btn btn-sm btn-default btn-block'>Detail</a>" +
 			"</p>");
 	});
