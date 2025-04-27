@@ -31,24 +31,35 @@
 					</tr>
 				</thead>
 				<tbody>
-					<?php $no = 1;
-					foreach ($galleri as $key => $value) { ?>
-						<tr>
-							<td><?= $no++ ?></td>
-							<td><?= $value->nama_lahan ?></td>
-							<td><?= $value->luas_lahan ?></td>
-							<td><?= $value->isi_lahan ?></td>
-							<td><?= $value->pemilik_lahan ?></td>
-							<td class="text-center"><img src="<?= base_url('gambar/' . $value->gambar) ?>" width="200px" height="120px"><br>
-								<span class="right badge badge-primary"><?= $value->total_foto ?> Foto</span>
-							</td>
-							<td class="text-center">
-								<a href="<?= base_url('lahan/add_foto/' . $value->id_lahan) ?>" class="btn btn-sm btn-success"><i class="fas fa-plus"></i> Add Foto</a>
-							</td>
+    <?php 
+    $no = 1;
+    if (!empty($galleri)) {
+        foreach ($galleri as $value) { ?>
+            <tr>
+                <td><?= $no++ ?></td>
+                <td><?= $value->nama_lahan ?></td>
+                <td><?= $value->luas_lahan ?> m²</td>
+                <td><?= $value->isi_lahan ?></td>
+                <td><?= $value->pemilik_lahan ?></td>
+                <td class="text-center">
+                    <img src="<?= base_url('gambar/' . $value->gambar) ?>" width="200px" height="120px" alt="Cover Lahan"><br>
+                    <span class="badge badge-primary mt-1"><?= isset($value->total_foto) ? $value->total_foto : 0 ?> Foto</span>
+                </td>
+                <td class="text-center">
+                    <a href="<?= base_url('lahan/add_foto/' . $value->id_lahan) ?>" class="btn btn-sm btn-success">
+                        <i class="fas fa-plus"></i> Add Foto
+                    </a>
+                </td>
+            </tr>
+    <?php 
+        } 
+    } else { ?>
+        <tr>
+            <td colspan="7" class="text-center">Data galeri tidak tersedia.</td>
+        </tr>
+    <?php } ?>
+</tbody>
 
-						</tr>
-					<?php } ?>
-				</tbody>
 			</table>
 
 		</div>

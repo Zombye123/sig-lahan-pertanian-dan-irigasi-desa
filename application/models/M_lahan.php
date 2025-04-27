@@ -1,73 +1,83 @@
 <?php
-
-defined('BASEPATH') or exit('No direct script access allowed');
-
-class M_lahan extends CI_Model
+class M_Lahan extends CI_Model
 {
-	public function add($data)
-	{
-		$this->db->insert('tbl_lahan', $data);
-	}
+    // Tambah data lahan
+    public function add($data)
+    {
+        return $this->db->insert('tbl_lahan', $data);
+    }
 
-	public function get_all_data()
-	{
-		$this->db->select('*');
-		$this->db->from('tbl_lahan');
-		$this->db->order_by('id_lahan', 'desc');
-		return $this->db->get()->result();
-	}
+    // Edit data lahan
+    public function edit($data)
+    {
+        return $this->db->update('tbl_lahan', $data, array('id_lahan' => $data['id_lahan']));
+    }
 
-	public function detail($id_lahan)
-	{
-		$this->db->select('*');
-		$this->db->from('tbl_lahan');
-		$this->db->where('id_lahan', $id_lahan);
-		return $this->db->get()->row();
-	}
+    // Tambah foto ke galeri lahan
+    public function add_foto($data)
+    {
+        return $this->db->insert('tbl_galeri_lahan', $data);
+    }
 
-	public function edit($data)
-	{
-		$this->db->where('id_lahan', $data['id_lahan']);
-		$this->db->update('tbl_lahan', $data);
-	}
+    // Hapus data lahan
+    public function delete($id_lahan)
+    {
+        $this->db->where('id_lahan', $id_lahan);
+        return $this->db->delete('tbl_lahan');
+    }
 
-	public function delete($data)
-	{
-		$this->db->where('id_lahan', $data['id_lahan']);
-		$this->db->delete('tbl_lahan', $data);
-	}
+    // Hapus foto dari galeri lahan dan file foto dari server
+    public function delete_foto($id_lahan, $id_galeri_lahan)
+    {
+        // Ambil data foto dari database berdasarkan id_galeri_lahan
+        $this->db->select('foto');
+        $this->db->from('tbl_galeri_lahan');
+        $this->db->where('id_galeri_lahan', $id_galeri_lahan);
+        $query = $this->db->get();
 
-	//galleri
+        if ($query->num_rows() > 0) {
+            $foto = $query->row()->foto;
 
-	public function get_all_galleri()
-	{
-		$this->db->select('tbl_lahan.*,count(tbl_galeri_lahan.id_lahan) as total_foto');
-		$this->db->from('tbl_lahan');
-		$this->db->join('tbl_galeri_lahan', 'tbl_galeri_lahan.id_lahan = tbl_lahan.id_lahan', 'left');
-		$this->db->group_by('tbl_lahan.id_lahan');
-		$this->db->order_by('id_lahan', 'desc');
-		return $this->db->get()->result();
-	}
+            // Hapus file foto dari server
+            $file_path = './foto/' . $foto;
+            if (file_exists($file_path)) {
+                unlink($file_path); // Hapus file foto dari server
+            }
 
-	public function detail_galleri($id_lahan)
-	{
-		$this->db->select('*');
-		$this->db->from('tbl_galeri_lahan');
-		$this->db->where('id_lahan', $id_lahan);
-		$this->db->order_by('id_lahan', 'desc');
-		return $this->db->get()->result();
-	}
+            // Hapus data foto dari database
+            $this->db->where('id_galeri_lahan', $id_galeri_lahan);
+            $this->db->delete('tbl_galeri_lahan');
+        }
+    }
 
-	public function delete_foto($data)
-	{
-		$this->db->where('id_galeri_lahan', $data['id_galeri_lahan']);
-		$this->db->delete('tbl_galeri_lahan', $data);
-	}
+    // Ambil semua data lahan
+    public function get_all_data()
+    {
+        return $this->db->get('tbl_lahan')->result();
+    }
 
-	public function add_foto($data)
-	{
-		$this->db->insert('tbl_galeri_lahan', $data);
-	}
+    // Ambil detail data lahan berdasarkan ID
+    public function detail($id_lahan)
+    {
+        $this->db->where('id_lahan', $id_lahan);
+        return $this->db->get('tbl_lahan')->row();
+    }
+
+    // Ambil galeri foto berdasarkan ID lahan
+    public function detail_galleri($id_lahan)
+    {
+        $this->db->where('id_lahan', $id_lahan);
+        return $this->db->get('tbl_galeri_lahan')->result();
+    }
+
+    // Ambil semua data galeri beserta data lahan
+    public function get_galleri()
+    {
+        $this->db->select('tbl_lahan.id_lahan, tbl_lahan.nama_lahan, tbl_lahan.luas_lahan, tbl_lahan.isi_lahan, tbl_lahan.pemilik_lahan, tbl_lahan.gambar, COUNT(tbl_galeri_lahan.id_galeri_lahan) AS total_foto');
+        $this->db->from('tbl_lahan');
+        $this->db->join('tbl_galeri_lahan', 'tbl_lahan.id_lahan = tbl_galeri_lahan.id_lahan', 'left');
+        $this->db->group_by('tbl_lahan.id_lahan');
+        return $this->db->get()->result();
+    }
 }
-
-/* End of file M_lahan.php */
+?>
