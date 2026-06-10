@@ -15,7 +15,7 @@
 		<div class="col-sm-6">
 			<div class="card card-primary">
 				<div class="card-header">
-					<h3 class="card-title">Data Lahan</h3>
+					<h3 class="card-title">Data Lahan8</h3>
 				</div>
 				<div class="card-body">
 					<table class="table">

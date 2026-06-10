@@ -5,6 +5,22 @@
 			<a href="<?= base_url() ?>" class="nav-link">Home</a>
 		</li>
 
+
+		<!-- Tombol dashboard -->
+		<li class="nav-item">
+			<a href="<?= base_url('statistik') ?>" class="nav-link">
+				<i class="fas fa-chart-bar"></i> Dashboard
+			</a>
+		</li>
+
+		<li class="nav-item">
+			<a href="<?= base_url('analisis') ?>"
+			class="nav-link">
+			<i class="fas fa-project-diagram"></i>
+			Analisis Irigasi
+			</a>
+		</li>
+
 		<li class="nav-item dropdown">
 			<a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">Lahan</a>
 			<ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
@@ -33,12 +49,7 @@
 			<a href="<?= base_url('home/about') ?>" class="nav-link">About</a>
 		</li>
 
-		<!-- Tombol Statistik -->
-<li class="nav-item">
-    <a href="<?= base_url('statistik') ?>" class="nav-link">
-        <i class="fas fa-chart-bar"></i> Statistik
-    </a>
-</li>
+
 
 
 	</ul>

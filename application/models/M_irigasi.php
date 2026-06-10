@@ -36,4 +36,9 @@ class M_irigasi extends CI_Model
 		$this->db->where('id_irigasi', $data['id_irigasi']);
 		$this->db->delete('tbl_irigasi', $data);
 	}
+
+	public function get_all_geo()
+	{
+		return $this->db->get('tbl_irigasi')->result();
+	}
 }

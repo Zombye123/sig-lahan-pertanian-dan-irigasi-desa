@@ -79,5 +79,10 @@ class M_Lahan extends CI_Model
         $this->db->group_by('tbl_lahan.id_lahan');
         return $this->db->get()->result();
     }
+
+    public function get_all_geo()
+    {
+        return $this->db->get('tbl_lahan')->result();
+    }
 }
 ?>

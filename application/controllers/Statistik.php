@@ -1,24 +1,32 @@
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
+defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Statistik extends CI_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('Statistik_model');  // Load the model
+        $this->load->model('M_statistik');
     }
 
     public function index()
     {
-        // Set title and data for the page
-        $data['title'] = 'Statistik Tanaman';
-        $data['grafik'] = $this->Statistik_model->get_tanaman_per_tahun();  // Fetch data for the table
+        $data = array(
+            'title'             => 'Dashboard Statistik',
 
-        // Dynamically load the content for the page (statistik/index.php)
-        $data['isi'] = $this->load->view('statistik/index', $data, TRUE);
+            'total_lahan'       => $this->M_statistik->total_lahan(),
+            'total_irigasi'     => $this->M_statistik->total_irigasi(),
+            'total_luas'        => $this->M_statistik->total_luas(),
+            'total_pemilik'     => $this->M_statistik->total_pemilik(),
 
-        // Check if this is the Statistik page and load a separate wrapper for it
-        $this->load->view('layout/v_wrapper_statistik', $data);  // Use a different wrapper for Statistik page
+            'tanaman'           => $this->M_statistik->statistik_tanaman(),
+            'tahun'             => $this->M_statistik->statistik_tahun(),
+            'pemilik'           => $this->M_statistik->top_pemilik(),
+            'terbaru'           => $this->M_statistik->data_terbaru(),
+
+            'isi'               => 'statistik/v_dashboard'
+        );
+
+        $this->load->view('layout/v_wrapper', $data, FALSE);
     }
 }
