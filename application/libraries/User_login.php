@@ -23,7 +23,7 @@ class User_login
 			$this->ci->session->set_userdata('username', $username);
 			redirect('home');
 		} else {
-			$this->ci->session->set_flashdata('pesan', 'Username Atau Password Tidak Ditemukan !!');
+			$this->ci->session->set_flashdata('pesan', 'Username Atau Password Tidak Ditemukan!!');
 			redirect('auth/login');
 		}
 	}

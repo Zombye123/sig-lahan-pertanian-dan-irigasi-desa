@@ -7,7 +7,6 @@
     <div class="card-body">
       <div class="row">
         <div class="col-sm-7">
-          <!-- Peta -->
           <div id="map" style="width: 100%; height: 600px;"></div>
         </div>
 
@@ -36,7 +35,7 @@
 
           <div class="form-group">
             <label>Nama Irigasi</label>
-            <input type="text" name="nama_irigasi" class="form-control" placeholder="Nama Irigasi">
+            <input type="text" name="nama_irigasi" class="form-control" placeholder="Nama Irigasi" required>
           </div>
 
           <div class="row">
@@ -56,7 +55,7 @@
 
           <div class="form-group">
             <label>Jalur GeoJSON</label>
-            <textarea name="jalur_geojson" rows="4" class="form-control"></textarea>
+            <textarea name="jalur_geojson" rows="4" class="form-control" readonly></textarea>
           </div>
 
           <div class="row">
@@ -86,8 +85,18 @@
           </div>
 
           <div class="form-group">
+            <label>Kondisi Irigasi</label>
+            <select name="kondisi" class="form-control" required>
+              <option value="">-- Pilih Kondisi --</option>
+              <option value="Baik">Baik</option>
+              <option value="Rusak Ringan">Rusak Ringan</option>
+              <option value="Rusak Berat">Rusak Berat</option>
+            </select>
+          </div>
+
+          <div class="form-group">
             <label>Gambar</label>
-            <input type="file" name="gambar" class="form-control">
+            <input type="file" name="gambar" class="form-control" required>
           </div>
 
           <div class="form-group">
@@ -102,86 +111,49 @@
   </div>
 </div>
 
-<!-- Leaflet Map + Draw -->
 <script>
-  var gruplahan = L.layerGroup();
-  var grupirigasi = L.layerGroup();
-
-  var peta1 = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    maxZoom: 19,
-    attribution: 'Map data &copy; OpenStreetMap contributors & CARTO'
-  });
-
-  var peta2 = L.tileLayer('http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}', {
-    attribution: '&copy; OpenStreetMap contributors'
-  });
-
-  var peta3 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  });
-
   var map = L.map('map', {
-    center: [-6.841019715671052, 107.14861675902371],
-    zoom: 15,
-    layers: [peta3, gruplahan, grupirigasi]
+    center: [-6.805674719157868, 107.14074957043474],
+    zoom: 20
   });
 
-  var baseLayers = {
-    "Grayscale": peta1,
-    "Satelite": peta2,
-    "Streets": peta3
-  };
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-  L.control.layers(baseLayers).addTo(map);
+  // Tampilkan Data Irigasi yang Sudah Ada
+  <?php if (!empty($irigasi)) { foreach ($irigasi as $i) { ?>
+    var dataGeo = <?= $i->jalur_geojson; ?>;
+    L.geoJSON(dataGeo, {
+        style: { color: "<?= $i->warna ?>", weight: <?= $i->ketebalan ?> }
+    }).addTo(map).bindPopup("<b><?= $i->nama_irigasi ?></b><br>Kondisi: <?= $i->kondisi ?>");
+  <?php } } ?>
 
   var drawnItems = new L.FeatureGroup();
   map.addLayer(drawnItems);
 
   var drawControl = new L.Control.Draw({
-    draw: {
-      polygon: false,
-      marker: false,
-      circle: false,
-      circlemarker: false,
-      rectangle: false,
-      polyline: true
-    },
-    edit: {
-      featureGroup: drawnItems
-    }
+    draw: { polygon: false, marker: false, circle: false, circlemarker: false, rectangle: false, polyline: true },
+    edit: { featureGroup: drawnItems }
   });
   map.addControl(drawControl);
 
-  // Update textarea function
   function updateGeoJSON() {
     var data = drawnItems.toGeoJSON();
     $("[name=jalur_geojson]").val(JSON.stringify(data));
   }
 
-  // Buat draw
   map.on('draw:created', function(event) {
-    var layer = event.layer;
-    drawnItems.addLayer(layer);
+    drawnItems.clearLayers(); // Agar hanya 1 jalur yang dibuat per irigasi
+    drawnItems.addLayer(event.layer);
     updateGeoJSON();
   });
 
-  // Edit draw
-  map.on('draw:edited', function(e) {
-    updateGeoJSON();
-  });
+  map.on('draw:edited', function(e) { updateGeoJSON(); });
+  map.on('draw:deleted', function(e) { updateGeoJSON(); });
 
-  // Delete draw
-  map.on('draw:deleted', function(e) {
-    updateGeoJSON();
-  });
-</script>
-
-<!-- Color Picker -->
-<script>
   $(function () {
-    $('.my-colorpicker2').colorpicker()
-
-    $('.my-colorpicker2').on('colorpickerChange', function(event) {
+    $('.my-colorpicker2').colorpicker().on('colorpickerChange', function(event) {
       $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
     });
   })

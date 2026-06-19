@@ -1,45 +1,54 @@
 <div class="content">
     <div class="card card-primary">
         <div class="card-header">
-            <h3 class="card-title">Input Data Lahan Pertanian</h3>
+            <h3 class="card-title">Data Lahan Pertanian</h3>
         </div>
         <div class="card-body">
+            <?php if ($this->session->userdata('username')) { ?>
+                <div class="mb-3">
+                    <a href="<?= base_url('lahan/add') ?>" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus"></i> Tambah Data Lahan
+                    </a>
+                </div>
+            <?php } ?>
+
             <?php
             if ($this->session->flashdata('sukses')) {
                 echo '<div class="alert alert-success alert-dismissible">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <i class="icon fas fa-check"></i>';
-                echo $this->session->flashdata('sukses');
-                echo '</div>';
+                        <i class="icon fas fa-check"></i> ' . $this->session->flashdata('sukses') . '
+                      </div>';
             }
             ?>
 
             <form action="<?= base_url('lahan/bulk_delete') ?>" method="post">
-                <table class="table table-bordered text-sm" id="example1">
+                <table class="table table-bordered table-striped text-sm" id="example1">
                     <thead class="text-center">
                         <tr>
                             <?php if ($this->session->userdata('username')) { ?>
-                                <th><input type="checkbox" id="select-all" name="select_all"> Pilih Semua</th>
+                                <th style="width: 80px;"><input type="checkbox" id="select-all"> Pilih</th>
                             <?php } ?>
-                            <th>No</th>
+                            <th style="width: 40px;">No</th>
                             <th>Nama Lahan</th>
-                            <th>Luas Lahan</th>
+                            <th>Luas Lahan</th> 
+                            <th>Luas (Ha)</th>  
                             <th>Isi Lahan</th>
                             <th>Pemilik Lahan</th>
                             <th>Alamat Pemilik</th>
-                            <th>Action</th>
+                            <th style="width: 100px;">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $no = 1;
-                        foreach ($lahan as $key => $value) { ?>
+                        foreach ($lahan as $value) { ?>
                             <tr>
                                 <?php if ($this->session->userdata('username')) { ?>
-                                    <td><input type="checkbox" name="id_lahan[]" value="<?= $value->id_lahan ?>"></td>
+                                    <td class="text-center"><input type="checkbox" name="id_lahan[]" value="<?= $value->id_lahan ?>"></td>
                                 <?php } ?>
-                                <td><?= $no++ ?></td>
+                                <td class="text-center"><?= $no++ ?></td>
                                 <td><?= htmlspecialchars($value->nama_lahan) ?></td>
-                                <td><?= htmlspecialchars($value->luas_lahan) ?></td>
+                                <td class="text-center"><?= htmlspecialchars($value->luas_lahan) ?></td>
+                                <td class="text-center"><?= htmlspecialchars($value->luas_ha) ?></td>
                                 <td><?= htmlspecialchars($value->isi_lahan) ?></td>
                                 <td><?= htmlspecialchars($value->pemilik_lahan) ?></td>
                                 <td><?= htmlspecialchars($value->alamat_pemilik) ?></td>
@@ -59,21 +68,28 @@
                 </table>
 
                 <?php if ($this->session->userdata('username')) { ?>
-                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data yang Dipilih?')">
-                        <i class="fas fa-trash"></i>
+                    <button type="submit" class="btn btn-danger btn-sm mt-3" onclick="return confirm('Apakah Anda Yakin Ingin Menghapus Data yang Dipilih?')">
+                        <i class="fas fa-trash"></i> Hapus Data Terpilih
                     </button>
-                <?php } else { ?>
-                    <div class="alert alert-warning mt-2">Anda harus login terlebih dahulu untuk menghapus data.</div>
                 <?php } ?>
-
             </form>
         </div>
     </div>
 </div>
 
 <script>
-    // Checkbox "Select All" untuk memilih atau membatalkan semua checkbox dalam tabel
-    $("#select-all").click(function() {
-        $('input[name="id_lahan[]"]').prop('checked', this.checked);
+    $(document).ready(function() {
+        // Inisialisasi DataTable jika belum ada
+        if (!$.fn.DataTable.isDataTable('#example1')) {
+            $("#example1").DataTable({
+                "responsive": true,
+                "autoWidth": false,
+            });
+        }
+
+        // Fungsi Select All
+        $("#select-all").click(function() {
+            $('input[name="id_lahan[]"]').prop('checked', this.checked);
+        });
     });
 </script>

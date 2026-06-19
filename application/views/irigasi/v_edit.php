@@ -95,6 +95,14 @@
 							</div>
 						</div>
 					</div>
+					<div class="form-group">
+						<label>Kondisi Irigasi</label>
+						<select name="kondisi" class="form-control" required>
+							<option value="Baik" <?= ($irigasi->kondisi == 'Baik') ? 'selected' : '' ?>>Baik</option>
+							<option value="Rusak Ringan" <?= ($irigasi->kondisi == 'Rusak Ringan') ? 'selected' : '' ?>>Rusak Ringan</option>
+							<option value="Rusak Berat" <?= ($irigasi->kondisi == 'Rusak Berat') ? 'selected' : '' ?>>Rusak Berat</option>
+						</select>
+					</div>
 
 					<div class="form-group">
 						<label>Gambar</label>

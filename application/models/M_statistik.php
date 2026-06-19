@@ -3,6 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class M_statistik extends CI_Model
 {
+    // --- STATISTIK DASAR ---
     public function total_lahan()
     {
         return $this->db->count_all('tbl_lahan');
@@ -30,6 +31,25 @@ class M_statistik extends CI_Model
             ->num_rows();
     }
 
+    // --- ANALISIS IRIGASI ---
+    public function get_kondisi_irigasi() 
+    {
+        $this->db->select("kondisi, COUNT(id_irigasi) as jumlah");
+        $this->db->group_by('kondisi');
+        return $this->db->get('tbl_irigasi')->result();
+    }
+
+    // --- ANALISIS PRODUKSI ---
+    public function get_produksi_per_tanaman() 
+    {
+        // Menghitung total hasil panen per jenis tanaman
+        $this->db->select("tanaman, SUM(hasil_panen) as total_panen");
+        $this->db->group_by('tanaman');
+        $this->db->order_by('total_panen', 'DESC');
+        return $this->db->get('tbl_produksi')->result();
+    }
+
+    // --- STATISTIK LAHAN ---
     public function statistik_tanaman()
     {
         return $this->db

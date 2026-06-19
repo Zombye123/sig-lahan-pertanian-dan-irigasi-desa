@@ -21,7 +21,10 @@
 	<link rel="stylesheet" href="<?= base_url() ?>template/dist/css/adminlte.min.css">
 	<!-- Google Font: Source Sans Pro -->
 	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 	<!-- jQuery -->
 	<script src="<?= base_url() ?>template/plugins/jquery/jquery.min.js"></script>
 	<!-- Bootstrap 4 -->

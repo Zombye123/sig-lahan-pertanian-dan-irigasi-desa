@@ -4,6 +4,7 @@ class M_Lahan extends CI_Model
     // Tambah data lahan
     public function add($data)
     {
+        // Luas HA langsung diambil dari nilai yang sudah dibersihkan dari form
         return $this->db->insert('tbl_lahan', $data);
     }
 
@@ -29,7 +30,6 @@ class M_Lahan extends CI_Model
     // Hapus foto dari galeri lahan dan file foto dari server
     public function delete_foto($id_lahan, $id_galeri_lahan)
     {
-        // Ambil data foto dari database berdasarkan id_galeri_lahan
         $this->db->select('foto');
         $this->db->from('tbl_galeri_lahan');
         $this->db->where('id_galeri_lahan', $id_galeri_lahan);
@@ -37,14 +37,10 @@ class M_Lahan extends CI_Model
 
         if ($query->num_rows() > 0) {
             $foto = $query->row()->foto;
-
-            // Hapus file foto dari server
             $file_path = './foto/' . $foto;
             if (file_exists($file_path)) {
-                unlink($file_path); // Hapus file foto dari server
+                unlink($file_path);
             }
-
-            // Hapus data foto dari database
             $this->db->where('id_galeri_lahan', $id_galeri_lahan);
             $this->db->delete('tbl_galeri_lahan');
         }
@@ -71,18 +67,30 @@ class M_Lahan extends CI_Model
     }
 
     // Ambil semua data galeri beserta data lahan
-    public function get_galleri()
-    {
-        $this->db->select('tbl_lahan.id_lahan, tbl_lahan.nama_lahan, tbl_lahan.luas_lahan, tbl_lahan.isi_lahan, tbl_lahan.pemilik_lahan, tbl_lahan.gambar, COUNT(tbl_galeri_lahan.id_galeri_lahan) AS total_foto');
-        $this->db->from('tbl_lahan');
-        $this->db->join('tbl_galeri_lahan', 'tbl_lahan.id_lahan = tbl_galeri_lahan.id_lahan', 'left');
-        $this->db->group_by('tbl_lahan.id_lahan');
-        return $this->db->get()->result();
-    }
+public function get_galleri()
+{
+    // Tambahkan 'tbl_lahan.luas_lahan' ke dalam daftar select
+    $this->db->select('tbl_lahan.id_lahan, tbl_lahan.nama_lahan, tbl_lahan.luas_lahan, tbl_lahan.luas_ha, tbl_lahan.isi_lahan, tbl_lahan.pemilik_lahan, tbl_lahan.gambar, COUNT(tbl_galeri_lahan.id_galeri_lahan) AS total_foto');
+    $this->db->from('tbl_lahan');
+    $this->db->join('tbl_galeri_lahan', 'tbl_lahan.id_lahan = tbl_galeri_lahan.id_lahan', 'left');
+    $this->db->group_by('tbl_lahan.id_lahan');
+    return $this->db->get()->result();
+}
 
+    // Ambil semua data geojson lahan
     public function get_all_geo()
     {
         return $this->db->get('tbl_lahan')->result();
+    }
+
+
+
+    // Menghapus banyak data sekaligus
+    public function bulk_delete($id_list)
+    {
+        // Menggunakan where_in untuk menghapus semua ID yang ada di dalam array
+        $this->db->where_in('id_lahan', $id_list);
+        return $this->db->delete('tbl_lahan');
     }
 }
 ?>

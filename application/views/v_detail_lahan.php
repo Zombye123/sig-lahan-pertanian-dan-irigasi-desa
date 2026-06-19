@@ -15,7 +15,7 @@
 		<div class="col-sm-6">
 			<div class="card card-primary">
 				<div class="card-header">
-					<h3 class="card-title">Data Lahan8</h3>
+					<h3 class="card-title">Data Lahan</h3>
 				</div>
 				<div class="card-body">
 					<table class="table">
@@ -101,7 +101,7 @@
 	});
 
 	var map = L.map('map', {
-		center: [-6.841019715671052, 107.14861675902371],
+		center: [-6.838794592277381, 107.1396653663789],
 		zoom: 15,
 		layers: [peta2, gruplahan, grupirigasi]
 	});

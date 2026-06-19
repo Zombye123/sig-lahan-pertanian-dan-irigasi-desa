@@ -10,22 +10,29 @@
                 <th>Nama Irigasi</th>
                 <th>Panjang Jalur</th>
                 <th>Lebar Jalur</th>
-                <th>Action</th>
+                <th>Kondisi</th> <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <?php 
             if (!empty($irigasi)) {
                 $no = 1;
-                foreach ($irigasi as $value) { ?>
+                foreach ($irigasi as $value) { 
+                    // Logika warna badge
+                    $badge_class = ($value->kondisi == 'Baik') ? 'badge-success' : 
+                                   (($value->kondisi == 'Rusak Ringan') ? 'badge-warning' : 'badge-danger');
+            ?>
                     <tr id="row-<?= $value->id_irigasi; ?>">
-                        <td>
+                        <td class="text-center">
                             <input type="checkbox" name="id_irigasi[]" class="check-item" value="<?= $value->id_irigasi; ?>">
                         </td>
-                        <td><?= $no++; ?></td>
+                        <td class="text-center"><?= $no++; ?></td>
                         <td><?= htmlspecialchars($value->nama_irigasi); ?></td>
                         <td><?= htmlspecialchars($value->panjang_jalur); ?> m</td>
                         <td><?= htmlspecialchars($value->lebar_jalur); ?> m</td>
+                        <td class="text-center">
+                            <span class="badge <?= $badge_class ?>"><?= htmlspecialchars($value->kondisi); ?></span>
+                        </td>
                         <td class="text-center">
                             <a href="<?= base_url('home/detail_irigasi/' . $value->id_irigasi); ?>" class="btn btn-sm btn-success">
                                 <i class="fas fa-eye"></i>
@@ -33,20 +40,22 @@
                             <a href="<?= base_url('irigasi/edit/' . $value->id_irigasi); ?>" class="btn btn-sm btn-warning">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            
+                            <a href="#" data-id="<?= $value->id_irigasi; ?>" class="btn btn-sm btn-danger delete-btn">
+                                <i class="fas fa-trash"></i>
+                            </a>
                         </td>
                     </tr>
-                <?php }
+            <?php }
             } else { ?>
                 <tr>
-                    <td colspan="6" class="text-center">Tidak ada data irigasi tersedia.</td>
+                    <td colspan="7" class="text-center">Tidak ada data irigasi tersedia.</td>
                 </tr>
             <?php } ?>
         </tbody>
     </table>
 
     <button type="submit" class="btn btn-danger mt-2 ml-2" id="delete-selected" style="display: none;">
-        <i class="fas fa-trash"></i> 
+        <i class="fas fa-trash"></i> Hapus Terpilih
     </button>
 </form>
 
@@ -73,7 +82,6 @@
             toggleDeleteButton();
         });
 
-        // Fungsi untuk menampilkan tombol delete jika ada yang dicentang
         function toggleDeleteButton() {
             if ($(".check-item:checked").length > 0) {
                 $("#delete-selected").show();
@@ -92,7 +100,7 @@
                     url: "<?= base_url('irigasi/delete/'); ?>" + id,
                     type: "POST",
                     success: function (response) {
-                        $("#row-" + id).fadeOut(); // Hapus baris tabel tanpa reload
+                        $("#row-" + id).fadeOut();
                         alert("Data berhasil dihapus!");
                     },
                     error: function () {
@@ -102,32 +110,24 @@
             }
         });
 
-        // Hapus Banyak Data dengan AJAX
+        // Hapus Banyak Data
         $("#bulk-delete-form").submit(function (e) {
             e.preventDefault();
-
-            let selected = $(".check-item:checked").map(function () {
-                return $(this).val();
-            }).get();
+            let selected = $(".check-item:checked").map(function () { return $(this).val(); }).get();
 
             if (selected.length === 0) {
                 alert("Silakan pilih data yang ingin dihapus!");
                 return;
             }
 
-            if (confirm("Apakah Anda yakin ingin menghapus data yang dipilih?")) {
+            if (confirm("Apakah Anda yakin ingin menghapus " + selected.length + " data?")) {
                 $.ajax({
                     url: "<?= base_url('irigasi/bulk_delete'); ?>",
                     type: "POST",
                     data: { id_irigasi: selected },
                     success: function (response) {
-                        selected.forEach(id => {
-                            $("#row-" + id).fadeOut(); // Hapus baris tabel tanpa reload
-                        });
-                        alert("Data yang dipilih berhasil dihapus!");
-                    },
-                    error: function () {
-                        alert("Gagal menghapus data!");
+                        selected.forEach(id => { $("#row-" + id).fadeOut(); });
+                        alert("Data berhasil dihapus!");
                     }
                 });
             }
